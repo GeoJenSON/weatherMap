@@ -10,6 +10,14 @@ var map = new mapboxgl.Map({
   zoom: 4,
 });
 
+map.addControl(
+  new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    language: "de-DE",
+    mapboxgl: mapboxgl
+  })
+);
+
 map.on("load", function () {
   // add layer for temperature
   map.addLayer({
@@ -93,7 +101,13 @@ map.on("load", function () {
 });
 
 //enumerate ids of the layers
-var toggleableLayerIds = ['temperature','cloud','precipitation','wind','pressure']
+var toggleableLayerIds = [
+  "temperature",
+  "cloud",
+  "precipitation",
+  "wind",
+  "pressure",
+];
 
 // set up the corresponding toggle button for each layer
 for (var i = 0; i < toggleableLayerIds.length; i++) {
