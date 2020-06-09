@@ -14,14 +14,52 @@ map.addControl(
   new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
     language: "de-DE",
-    mapboxgl: mapboxgl
+    mapboxgl: mapboxgl,
   })
 );
 
 map.on("load", function () {
+  var tempValues = [
+    "&nbsp; &nbsp; -40",
+    "&nbsp; &nbsp; -30",
+    "&nbsp; &nbsp; -20",
+    "&nbsp; &nbsp; -10",
+    "&nbsp; &nbsp; &nbsp; 0",
+    "&nbsp; &nbsp; +10",
+    "&nbsp; &nbsp; +20",
+    "&nbsp; &nbsp; +25",
+    "&nbsp; &nbsp; +30",
+  ];
+  var tempColors = [
+    "rgba(130, 22, 146, 1)",
+    "rgba(130, 87, 219, 1)",
+    "rgba(32, 140, 236, 1)",
+    "rgba(32, 196, 232, 1)",
+    "rgba(35, 221, 221, 1)",
+    "rgba(194, 255, 40, 1)",
+    "rgba(255, 240, 40, 1)",
+    "rgba(255, 194, 40, 1)",
+    "rgba(252, 128, 20, 1)",
+  ];
+
+  for (i = 0; i < tempValues.length; i++) {
+    var layer = tempValues[i];
+    var color = tempColors[i];
+    var item = document.createElement("div");
+    var key = document.createElement("span");
+    key.className = "legend-key";
+    key.style.backgroundColor = color;
+
+    var value = document.createElement("span");
+    value.innerHTML = layer;
+    item.appendChild(key);
+    item.appendChild(value);
+    legend.appendChild(item);
+  }
+
   // add layer for temperature
   map.addLayer({
-    id: "temperature",
+    id: "Lufttemperatur",
     type: "raster",
     source: {
       type: "raster",
@@ -31,13 +69,16 @@ map.on("load", function () {
       ],
       tileSize: 256,
     },
+    layout: {
+      visibility: "none",
+    },
     minzoom: 0,
     maxzoom: 22,
   });
 
   // add layer for clouds
   map.addLayer({
-    id: "cloud",
+    id: "Wolkenbedeckung",
     type: "raster",
     source: {
       type: "raster",
@@ -47,13 +88,16 @@ map.on("load", function () {
       ],
       tileSize: 256,
     },
+    layout: {
+      visibility: "none",
+    },
     minzoom: 0,
     maxzoom: 22,
   });
 
   // add layer for precipitation
   map.addLayer({
-    id: "precipitation",
+    id: "Niederschlag",
     type: "raster",
     source: {
       type: "raster",
@@ -63,13 +107,16 @@ map.on("load", function () {
       ],
       tileSize: 256,
     },
+    layout: {
+      visibility: "none",
+    },
     minzoom: 0,
     maxzoom: 22,
   });
 
   // add layer for wind speed
   map.addLayer({
-    id: "wind",
+    id: "Windgeschwindigkeit",
     type: "raster",
     source: {
       type: "raster",
@@ -79,13 +126,16 @@ map.on("load", function () {
       ],
       tileSize: 256,
     },
+    layout: {
+      visibility: "none",
+    },
     minzoom: 0,
     maxzoom: 22,
   });
 
   // add layer for sea level pressure
   map.addLayer({
-    id: "pressure",
+    id: "Luftdruck",
     type: "raster",
     source: {
       type: "raster",
@@ -95,6 +145,9 @@ map.on("load", function () {
       ],
       tileSize: 256,
     },
+    layout: {
+      visibility: "none",
+    },
     minzoom: 0,
     maxzoom: 22,
   });
@@ -102,11 +155,11 @@ map.on("load", function () {
 
 //enumerate ids of the layers
 var toggleableLayerIds = [
-  "temperature",
-  "cloud",
-  "precipitation",
-  "wind",
-  "pressure",
+  "Lufttemperatur" ,
+  "Wolkenbedeckung",
+  "Niederschlag",
+  "Windgeschwindigkeit",
+  "Luftdruck"
 ];
 
 // set up the corresponding toggle button for each layer
@@ -115,7 +168,7 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
 
   var link = document.createElement("a");
   link.href = "#";
-  link.className = "active";
+  link.className = "";
   link.textContent = id;
 
   link.onclick = function (e) {
