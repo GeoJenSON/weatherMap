@@ -19,45 +19,11 @@ map.addControl(
 );
 
 map.on("load", function () {
-  var tempValues = [
-    "&nbsp; &nbsp; -40",
-    "&nbsp; &nbsp; -30",
-    "&nbsp; &nbsp; -20",
-    "&nbsp; &nbsp; -10",
-    "&nbsp; &nbsp; &nbsp; 0",
-    "&nbsp; &nbsp; +10",
-    "&nbsp; &nbsp; +20",
-    "&nbsp; &nbsp; +25",
-    "&nbsp; &nbsp; +30",
-  ];
-  var tempColors = [
-    "rgba(130, 22, 146, 1)",
-    "rgba(130, 87, 219, 1)",
-    "rgba(32, 140, 236, 1)",
-    "rgba(32, 196, 232, 1)",
-    "rgba(35, 221, 221, 1)",
-    "rgba(194, 255, 40, 1)",
-    "rgba(255, 240, 40, 1)",
-    "rgba(255, 194, 40, 1)",
-    "rgba(252, 128, 20, 1)",
-  ];
+  //--------------------------------------
+  // adding all the weather layers
+  //--------------------------------------
 
-  for (i = 0; i < tempValues.length; i++) {
-    var layer = tempValues[i];
-    var color = tempColors[i];
-    var item = document.createElement("div");
-    var key = document.createElement("span");
-    key.className = "legend-key";
-    key.style.backgroundColor = color;
-
-    var value = document.createElement("span");
-    value.innerHTML = layer;
-    item.appendChild(key);
-    item.appendChild(value);
-    legend.appendChild(item);
-  }
-
-  // add layer for temperature
+  // temperature
   map.addLayer({
     id: "Lufttemperatur",
     type: "raster",
@@ -76,7 +42,7 @@ map.on("load", function () {
     maxzoom: 22,
   });
 
-  // add layer for clouds
+  // clouds
   map.addLayer({
     id: "Wolkenbedeckung",
     type: "raster",
@@ -95,7 +61,7 @@ map.on("load", function () {
     maxzoom: 22,
   });
 
-  // add layer for precipitation
+  // precipitation
   map.addLayer({
     id: "Niederschlag",
     type: "raster",
@@ -114,7 +80,7 @@ map.on("load", function () {
     maxzoom: 22,
   });
 
-  // add layer for wind speed
+  // wind speed
   map.addLayer({
     id: "Windgeschwindigkeit",
     type: "raster",
@@ -133,7 +99,7 @@ map.on("load", function () {
     maxzoom: 22,
   });
 
-  // add layer for sea level pressure
+  // sea level pressure
   map.addLayer({
     id: "Luftdruck",
     type: "raster",
@@ -155,17 +121,16 @@ map.on("load", function () {
 
 //enumerate ids of the layers
 var toggleableLayerIds = [
-  "Lufttemperatur" ,
+  "Lufttemperatur",
   "Wolkenbedeckung",
   "Niederschlag",
   "Windgeschwindigkeit",
-  "Luftdruck"
+  "Luftdruck",
 ];
 
 // set up the corresponding toggle button for each layer
 for (var i = 0; i < toggleableLayerIds.length; i++) {
   var id = toggleableLayerIds[i];
-
   var link = document.createElement("a");
   link.href = "#";
   link.className = "";
