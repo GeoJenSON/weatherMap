@@ -10,6 +10,14 @@ var map = new mapboxgl.Map({
   zoom: 4,
 });
 
+// add test marker to map
+var el = document.createElement("div");
+el.className = "city-marker";
+
+// make a marker for each feature and add to the map
+new mapboxgl.Marker(el).
+setLngLat({lng: 13.5, lat: 52.5}).addTo(map);
+
 map.addControl(
   new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
