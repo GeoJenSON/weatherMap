@@ -235,6 +235,13 @@ body {
 /* CITY MARKER */
 /*-------------------------------*/
 
+.city-temp {
+  font-size: 150%;
+  color: #666;
+  left: 5px;
+  top: -20px;
+}
+
 .city-marker {
   background-image: url('http://openweathermap.org/img/wn/04d@2x.png');
   background-color: rgba(0, 0, 0, 0.4);
@@ -242,5 +249,5 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  left: -30px;
+  left: -25px;
 }

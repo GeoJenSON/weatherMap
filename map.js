@@ -2,22 +2,112 @@ var mapboxKey = config.MAPBOX_KEY;
 var mapboxStyle = config.MAPBOX_STYLE;
 var owmKey = config.OWM_KEY;
 
+// function to load the OWM data for the cities
+function loadCities(zoomlevel) {
+  // first call for the southwest bbox
+  fetch(
+    "http://api.openweathermap.org/data/2.5/box/city?bbox=5.9,47,10,51," +
+      zoomlevel +
+      "&appid=" +
+      owmKey
+  )
+    .then(function (resp) {
+      return resp.json();
+    })
+    .then(function (data) {
+      drawCities(data);
+    })
+    .catch(function () {
+      // catch any errors
+    });
+
+  // second call for the southeast bbox
+  fetch(
+    "http://api.openweathermap.org/data/2.5/box/city?bbox=10.01,47,15.10,51," +
+      zoomlevel +
+      "&appid=" +
+      owmKey
+  )
+    .then(function (resp) {
+      return resp.json();
+    })
+    .then(function (data) {
+      drawCities(data);
+    })
+    .catch(function () {
+      // catch any errors
+    });
+
+  // third call for the northeast bbox
+  fetch(
+    "http://api.openweathermap.org/data/2.5/box/city?bbox=10.01,51,15.10,55," +
+      zoomlevel +
+      "&appid=" +
+      owmKey
+  )
+    .then(function (resp) {
+      return resp.json();
+    })
+    .then(function (data) {
+      drawCities(data);
+    })
+    .catch(function () {
+      // catch any errors
+    });
+
+  // fourth call for the northwest bbox
+  fetch(
+    "http://api.openweathermap.org/data/2.5/box/city?bbox=5,51,10,55," +
+      zoomlevel +
+      "&appid=" +
+      owmKey
+  )
+    .then(function (resp) {
+      return resp.json();
+    })
+    .then(function (data) {
+      drawCities(data);
+    })
+    .catch(function () {
+      // catch any errors
+    });
+}
+
+// function to draw cities depending on the OWM data
+function drawCities(data) {
+  for (var i = 0; i < data.list.length; i++) {
+    var celsius = Math.round(parseFloat(data.list[i].main.temp));
+    var lng = data.list[i].coord.Lon;
+    var lat = data.list[i].coord.Lat;
+    var cityName = data.list[i].name;
+    var iconCode = data.list[i].weather[0].icon;
+
+    var cityMarker = document.createElement("div");
+    cityMarker.className = "city-marker"
+    cityMarker.style.backgroundImage = "url('http://openweathermap.org/img/wn/" + iconCode + "@2x.png')"
+    new mapboxgl.Marker(cityMarker).setLngLat({ lng: lng, lat: lat }).addTo(map);
+
+    var cityTemp = document.createElement("div");
+    cityTemp.className = "city-temp";
+    cityTemp.innerHTML = "25";
+    new mapboxgl.Marker(cityTemp).setLngLat({lng: lng, lat: lat}).addTo(map);
+
+  }
+
+}
+
+// load the Mapbox map
 mapboxgl.accessToken = mapboxKey; // access token
 var map = new mapboxgl.Map({
   container: "map",
   style: mapboxStyle, // style URL
-  center: [15, 51], //exactly the opposite order of mapbox studio (long, lat)
-  zoom: 4,
+  center: [10, 51], //exactly the opposite order of mapbox studio (long, lat)
+  zoom: 5.5,
+  maxZoom: 7,
+  minZoom: 4,
 });
 
-// add test marker to map
-var el = document.createElement("div");
-el.className = "city-marker";
-
-// make a marker for each feature and add to the map
-new mapboxgl.Marker(el).
-setLngLat({lng: 13.5, lat: 52.5}).addTo(map);
-
+// add the Geodcoder
 map.addControl(
   new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
@@ -125,6 +215,47 @@ map.on("load", function () {
     minzoom: 0,
     maxzoom: 22,
   });
+
+  loadCities(5);
+});
+
+map.on("zoomend", function () {
+
+  var zoom = map.getZoom();
+  var zoomlevel;
+
+
+  if (zoom < 5) {
+    zoomlevel = 5;
+    document.querySelectorAll('.city-marker').forEach(function(div) {
+      div.remove()
+    })
+    document.querySelectorAll('.city-temp').forEach(function(div) {
+      div.remove()
+    })
+    loadCities(zoomlevel);
+  } 
+  else if (zoom >= 5 && zoom < 6) {
+    zoomlevel = 6;
+    document.querySelectorAll('.city-marker').forEach(function(div) {
+      div.remove()
+    })
+    document.querySelectorAll('.city-temp').forEach(function(div) {
+      div.remove()
+    })
+    loadCities(zoomlevel);
+  } 
+  else if (zoom >= 6) {
+    zoomlevel = 7;
+    document.querySelectorAll('.city-marker').forEach(function(div) {
+      div.remove()
+    })
+    document.querySelectorAll('.city-temp').forEach(function(div) {
+      div.remove()
+    })
+    loadCities(zoomlevel);
+  }
+
 });
 
 //enumerate ids of the layers
