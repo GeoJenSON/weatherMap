@@ -89,7 +89,7 @@ function drawCities(data) {
 
     var cityTemp = document.createElement("div");
     cityTemp.className = "city-temp";
-    cityTemp.innerHTML = "25";
+    cityTemp.innerHTML = celsius + "°C";
     new mapboxgl.Marker(cityTemp).setLngLat({lng: lng, lat: lat}).addTo(map);
 
   }
