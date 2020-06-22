@@ -1,0 +1,82 @@
+#map{
+    position: relative;
+    height: 70%;
+    width: 100%;
+    background-color: darkgray;
+    z-index:0;
+}
+
+.geocoder {
+    margin: 1em 0em;
+}
+
+.mapboxgl-ctrl-geocoder, .mapboxgl-ctrl-geocoder .suggestions {
+    box-shadow: 0 0 5px 0px rgba(0,0,0,.1);
+}
+
+.mapboxgl-ctrl-geocoder {
+    min-width: 100%;
+}
+
+.mapboxgl-ctrl-geocoder--icon-search {
+    position: absolute;
+    /* top: 13px; */
+    left: .7em;
+    width: auto;
+    height: auto;
+}
+
+.button {
+    margin: 0 .8em;
+    background-color: #cdcdcd;
+    border:none;
+    border-radius: .3em;
+    color: white;
+    padding: .8em;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    padding: 10px 16px;
+    cursor: pointer;
+  }
+
+  .button:hover {
+    background-color: #5c5c5c;
+    transition-duration: 1s;
+  }
+
+/* Style the active class, and buttons on mouse-over */
+.buttonActive {
+    background-color: #5c5c5c;
+}
+
+#weatherIcon{
+    text-align: center;
+}
+
+#weatherIcon > img {
+    vertical-align: middle;
+}
+
+#weatherIcon > span {
+    vertical-align: middle;
+    font-size: 2.5em;
+}
+
+@media only screen and (max-width: 639px) {
+    .form-inline{
+        width: 100%;
+    }  
+    
+    .geocoder {
+        width: 100%;
+    }
+
+}
+
+@media only screen and (max-width: 995px) {
+    #menu input {
+        margin: .4em;
+    }
+}

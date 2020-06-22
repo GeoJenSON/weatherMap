@@ -1,48 +1,221 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Current Weather</title>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,900" rel="stylesheet">
 
-<style>
-body {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 400;
-    font-size: 1.3em;
-    color: #fff;
-    text-shadow: .1em .1em 0 rgba(0,0,0,0.3);
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-image: linear-gradient(to right top, #99bbcb, #a5c7d7, #b1d4e2, #bde0ee, #c9edfa);
-}
-h1 {
-    margin: 0 auto;
-    font-size: 2.2em;
-    text-align: center;
-    color: #fff;
-    font-size: 5em;
-}
-body.sunny {
-    background-image: linear-gradient(to right top, #ff4e50, #ff713e, #ff932b, #ffb41d, #f9d423);
-}
-body.cloudy {
-    background-image: linear-gradient(to right top, #63747c, #71858e, #7f96a0, #8da8b2, #9bbac5);
-}
-body.rainy {
-    background-image: linear-gradient(to right top, #637c7b, #718e8c, #7ea09e, #8db2b0, #9bc5c3);
-}
-</style>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aktuelle Wetterkarte</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <!-- MapBox -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css" rel="stylesheet" />
+
+  <!-- own Style CSS -->
+  <link rel="stylesheet" href="css/legend.css">
+  <link rel="stylesheet" href="css/map.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- MapBox GL Geocoder -->
+  <script
+    src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+  <link rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+    type="text/css" />
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+  <!-- Load config file-->
+  <script src="js/config.js"></script>
 </head>
+
 <body>
-  <div id="weather">
-    <div id="description"></div>
-    <h1 id="temp"></h1>
-    <div id="location"></div>
-    <img src="" id="icon" />
+  <!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
+  <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+  <!-- NAVBAR from Bootstrap -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <span class="titleNav navbar-brand mb-0 h1">Aktuelle Wetterkarte</span>
+      <form class="form-inline">
+        <div id="geocoder" class="geocoder"></div>
+      </form>
+    </div>
+  </nav>
+  <!-- MAP -->
+  <div id="map"></div>
+  <!-- Legende -->
+  <!--<div id="legendOverlay">-->
+  <div id="legendLufttemperatur" class="legendOverlay">
+    <div class="title">Temperatur in °C</div>
+    <div class="legend-colors" id="temperature-colors"></div>
+    <div class='legend-scale'>
+      <ul class='labels' id="temperature-label">
+        <li><span></span>-40</li>
+        <li><span></span>-20</li>
+        <li><span></span>0</li>
+        <li><span></span>20</li>
+        <li><span></span>40</li>
+      </ul>
+    </div>
   </div>
-  <script src="script.js"></script>
+  <div id="legendWolkenbedeckung" class="legendOverlay">
+    <div class="title">Wolkenbedeckung in %</div>
+    <div class="legend-colors" id="cloud-colors"></div>
+    <div class='legend-scale'>
+      <ul class='labels' id="cloud-label">
+        <li><span></span>0</li>
+        <li><span></span>25</li>
+        <li><span></span>50</li>
+        <li><span></span>75</li>
+        <li><span></span>100</li>
+      </ul>
+    </div>
+  </div>
+  <div id="legendNiederschlag" class="legendOverlay">
+    <div class="title">Niederschlag mm/h</div>
+    <div class="legend-colors" id="rain-colors"></div>
+    <div class='legend-scale'>
+      <ul class='labels' id="rain-label">
+        <li><span></span>0</li>
+        <li><span></span>1</li>
+        <li><span></span>4</li>
+        <li><span></span>7</li>
+        <li><span></span>10</li>
+        <li><span></span>14</li>
+        <li><span></span>24</li>
+        <li><span></span>60</li>
+      </ul>
+    </div>
+  </div>
+  <div id="legendWindgeschwindigkeit" class="legendOverlay">
+    <div class="title">Windgeschwindigkeit in m/s</div>
+    <div class="legend-colors" id="wind-colors"></div>
+    <div class='legend-scale'>
+      <ul class='labels' id="wind-label">
+        <li><span></span>1</li>
+        <li><span></span>5</li>
+        <li><span></span>15</li>
+        <li><span></span>25</li>
+        <li><span></span>50</li>
+        <li><span></span>100</li>
+      </ul>
+    </div>
+  </div>
+  <div id="legendLuftdruck" class="legendOverlay">
+    <div class="title">Luftdruck in hPa</div>
+    <div class="legend-colors" id="pressure-colors"></div>
+    <div class='legend-scale'>
+      <ul class='labels' id="pressure-label">
+        <li><span></span>940</li>
+        <li><span></span>980</li>
+        <li><span></span>1010</li>
+        <li><span></span>1040</li>
+        <li><span></span>1080</li>
+      </ul>
+    </div>
+  </div>
+  <!--</div>-->
+  <!-- CONTENT  as two column layout -->
+  <div class="container">
+    <!-- Layer Menu for weather parameter -->
+    <div id="menu" class="row">
+      <input id="Lufttemperatur" class="button col" type="button" value="Lufttemperatur" />
+      <input id="Wolkenbedeckung" class="button col" type="button" value="Wolkenbedeckung" />
+      <input id="Niederschlag" class="button col" type="button" value="Niederschlag" />
+      <input id="Windgeschwindigkeit" class="button col" type="button" value="Windgeschwindigkeit" />
+      <input id="Luftdruck" class="button col" type="button" value="Luftdruck" />
+    </div>
+    <hr>
+    <!-- Information -->
+    <div class="row">
+      <div id="weatherIcon" class="col-md-4 col-xs-4">
+      </div>
+      <div class="col-md-4 col-xs-4">
+        <h1>Ort</h1>
+        <table class="table">
+          <tbody>
+            <tr>
+              <th scope="row">Ort</th>
+              <td id="place_name">Bitte Ort in Suche eingeben</td>
+            </tr>
+            <tr>
+              <th scope="row">Latitude</th>
+              <td id="latitude">-</td>
+            </tr>
+            <tr>
+              <th scope="row">Longitude</th>
+              <td id="longitude">-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-4 col-xs-4">
+        <h1>Wetterdaten</h1>
+        <table class="table">
+          <tbody>
+            <tr>
+              <th scope="row">Temperatur</th>
+              <td id="temp">-</td>
+            </tr>
+            <tr>
+              <th scope="row">Temperatur (min.)</th>
+              <td id="temp_min">-</td>
+            </tr>
+            <tr>
+              <th scope="row">Temperatur (max.)</th>
+              <td id="temp_max">-</td>
+            </tr>
+            <tr>
+              <th scope="row">Wolkenbedeckung</th>
+              <td id="clouds">-</td>
+            </tr>
+            <tr>
+              <th scope="row">Windrichtung</th>
+              <td id="deg">-</td>
+            </tr>
+            <tr>
+              <th scope="row">Windgeschwindigkeit</th>
+              <td id="speed">-</td>
+            </tr>
+            <tr>
+              <th scope="row">Luftfeuchtigkeit</th>
+              <td id="humidity">-</td>
+            </tr>
+            <tr>
+              <th scope="row">Luftdruck</th>
+              <td id="pressure">-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- FOOTER container from Bootstrap -->
+  <footer>
+    <div class="container footer">
+      <ul class="text-muted">
+        <li>Beuth Hochschule für Technik</li>
+        <li>Sommersemester 2020</li>
+        <li>Wetterdaten von <a href="https://openweathermap.org/">openweathermap.org <a
+              href="https://creativecommons.org/licenses/by-sa/4.0/legalcode">(CC BY-SA 4.0)</a></li>
+      </ul>
+    </div>
+  </footer>
+  <!-- JS for Bootstrap 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <!-- JS for MapBox -->
+  <script src="js/functions.js"></script>
+  <script src="js/map.js"></script>
 </body>
+
 </html>

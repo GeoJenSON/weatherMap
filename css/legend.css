@@ -1,87 +1,27 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-size: 15px;
-  font-family: Barlow, sans-serif;
-}
-
-#map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-}
-
-
-/*-------------------------------*/
-/* LAYER SELECTOR */
-/*-------------------------------*/
-
-#menu {
-  background: #fff;
-  position: absolute;
-  z-index: 1;
-  top: 10px;
-  left: 10px;
-  border-radius: 3px;
-  width: 150px;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-}
-
-#menu a {
-  font-size: 90%;
-  color: #404040;
-  display: block;
-  margin: 0;
-  padding: 0;
-  padding: 10px;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-  text-align: center;
-}
-
-#menu a:last-child {
-  border: none;
-}
-
-#menu a:hover {
-  background-color: #f8f8f8;
-  color: #404040;
-}
-
-#menu a.active {
-  background-color: #3887be;
-  color: #ffffff;
-}
-
-#menu a.active:hover {
-  background: #3074a4;
-}
-
-
 /*-------------------------------*/
 /* LEGEND */
 /*-------------------------------*/
 
-.map-overlay {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  background: rgba(255, 255, 255, 0.5);
-  margin-right: 20px;
-  font-family: Barlow, sans-serif;
-  overflow: auto;
-  border-radius: 3px;
-  border: 1px solid #ddd;
-}
-
-#legend {
-  padding: 10px 10px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  line-height: 18px;
-  height: 350px;
-  margin-bottom: 40px;
-  width: 250px;
+.legendOverlay {
+    /* position: absolute; */
+    /* bottom: 10px; */
+    /* left: 10px; */
+    background: rgba(255, 255, 255, 0.9);
+    /* margin-top: -23em; */
+    /* font-family: Barlow, sans-serif; */
+    /* overflow: auto; */
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    /* z-index: 2; */
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    width: 22em;
+    padding: 1em 1em 0em 1em;
+    margin-top: -8em;
+    overflow: auto;
 }
 
 #legend-header h3 {
@@ -94,6 +34,15 @@ body {
   width: 50%;
   padding-left: 25%;
   margin-bottom: 10px;
+}
+
+
+#legendLuftdruck,
+#legendWindgeschwindigkeit,
+#legendNiederschlag,
+#legendWolkenbedeckung,
+#legendLufttemperatur {
+  display: none;
 }
 
 .title {
@@ -230,24 +179,3 @@ body {
   );
 }
 
-
-/*-------------------------------*/
-/* CITY MARKER */
-/*-------------------------------*/
-
-.city-temp {
-  font-size: 150%;
-  color: #666;
-  left: 10px;
-  top: -20px;
-}
-
-.city-marker {
-  background-image: url('http://openweathermap.org/img/wn/04d@2x.png');
-  background-color: rgba(0, 0, 0, 0.4);
-  background-size: cover;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  left: -25px;
-}
