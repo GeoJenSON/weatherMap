@@ -1,7 +1,6 @@
 var mapboxKey = config.MAPBOX_KEY;
-var mapboxStyle = config.MAPBOX_STYLE;
-var owmKeyFabi = config.OWM_KEY_F;
-var owmKeyElisa = config.OWM_KEY_E;
+var owmKey = config.OWM_KEY;
+var styleURL = config.STYLE_URL;
 
 $(document).ready(function () {
 
@@ -37,7 +36,7 @@ $(document).ready(function () {
       "http://api.openweathermap.org/data/2.5/box/city?bbox=5.9,47,10,51," +
         zoomlevel +
         "&appid=" +
-        owmKeyFabi
+        owmKey
     )
       .then(function (resp) {
         return resp.json();
@@ -54,7 +53,7 @@ $(document).ready(function () {
       "http://api.openweathermap.org/data/2.5/box/city?bbox=10.01,47,15.10,51," +
         zoomlevel +
         "&appid=" +
-        owmKeyFabi
+        owmKey
     )
       .then(function (resp) {
         return resp.json();
@@ -71,7 +70,7 @@ $(document).ready(function () {
       "http://api.openweathermap.org/data/2.5/box/city?bbox=10.01,51,15.10,55," +
         zoomlevel +
         "&appid=" +
-        owmKeyFabi
+        owmKey
     )
       .then(function (resp) {
         return resp.json();
@@ -88,7 +87,7 @@ $(document).ready(function () {
       "http://api.openweathermap.org/data/2.5/box/city?bbox=5,51,10,55," +
         zoomlevel +
         "&appid=" +
-        owmKeyFabi
+        owmKey
     )
       .then(function (resp) {
         return resp.json();
@@ -104,7 +103,7 @@ $(document).ready(function () {
   var map = new mapboxgl.Map({
     accessToken: mapboxKey,
     container: "map", // container id
-    style: mapboxStyle, //
+    style: styleURL, // map style
     center: [10.5, 51.2], // starting position [lng, lat]
     zoom: 5, // starting zoom
     minZoom: 4,
@@ -119,24 +118,42 @@ $(document).ready(function () {
 
   document.getElementById("geocoder").appendChild(geocoder.onAdd(map));
 
-  // Listen for the `result` event from the Geocoder
-  // `result` event is triggered when a user makes a selection
-  // Get the coordinates of the result
+    // Funtion: Set data from Geocoder to html content
+    function setGeocoderData(lat, lon, name){
+      document.getElementById('place_name').innerHTML = name;
+      document.getElementById('latitude').innerHTML = lat.toString().replace(".",",") + "°";
+      document.getElementById('longitude').innerHTML = lon.toString().replace(".",",") + "°";
+     
+      getOwmJSON(lat,lon,"current");
+    }
+
+// Listen for the 'result' event from the Geocoder
+  // 'result' event is triggered when a user makes a selection
+  // Get the coordinates and the place name of the 'result'
+  var latitude;
+  var longitude;
+  var place_name;
+
   geocoder.on("result", function (ev) {
     console.log(ev.result.place_name);
     console.log(ev.result);
     console.log(ev.result.geometry.coordinates);
     console.log(ev.result.geometry.coordinates[0]);
 
+    document.getElementById('diagramm').style.display = 'none';
+
     var latitude = ev.result.geometry.coordinates[1];
     var longitude = ev.result.geometry.coordinates[0];
     var place_name = ev.result.place_name;
 
-    document.getElementById("place_name").innerHTML = place_name;
-    document.getElementById("latitude").innerHTML = latitude.toString().replace(".", ",") + "°";
-    document.getElementById("longitude").innerHTML = longitude.toString().replace(".", ",") + "°";
+    setGeocoderData(latitude, longitude, place_name);
 
-    getOwmJSON(latitude, longitude);
+    if(latitude !== undefined && longitude !== undefined){
+      console.log("forecastButton könnte starten");
+      document.getElementById('forecastButton').addEventListener('click', function(){
+        getOwmJSON(latitude,longitude,"forecast")
+      });
+    }
   });
   /* Add Parameter layer on map */
   map.on("load", function () {
@@ -148,7 +165,7 @@ $(document).ready(function () {
         type: "raster",
         tiles: [
           "https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=" +
-            owmKeyElisa,
+            owmKey,
         ],
         tileSize: 256,
       },
@@ -158,7 +175,7 @@ $(document).ready(function () {
       minzoom: 0,
       maxzoom: 22,
     });
-
+    
     // add layer for clouds
     map.addLayer({
       id: "Wolkenbedeckung",
@@ -167,7 +184,7 @@ $(document).ready(function () {
         type: "raster",
         tiles: [
           "https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=" +
-            owmKeyElisa,
+            owmKey,
         ],
         tileSize: 256,
       },
@@ -186,7 +203,7 @@ $(document).ready(function () {
         type: "raster",
         tiles: [
           "https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=" +
-            owmKeyElisa,
+            owmKey,
         ],
         tileSize: 256,
       },
@@ -205,7 +222,7 @@ $(document).ready(function () {
         type: "raster",
         tiles: [
           "https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=" +
-            owmKeyElisa,
+            owmKey,
         ],
         tileSize: 256,
       },
@@ -224,7 +241,7 @@ $(document).ready(function () {
         type: "raster",
         tiles: [
           "https://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=" +
-            owmKeyElisa,
+            owmKey,
         ],
         tileSize: 256,
       },
@@ -302,14 +319,14 @@ $(document).ready(function () {
         document.getElementById("legend" + lastClickedLayerId).style.display =
           "none"; // remove legend
         buttonElement = document.getElementById(lastClickedLayerId);
-        buttonElement.classList.remove("buttonActive");
+        buttonElement.classList.remove("buttonLegendeActive");
       }
       console.log(map);
       map.setLayoutProperty(currentClickedLayerId, "visibility", "visible");
       document.getElementById("legend" + currentClickedLayerId).style.display =
         "block"; // set legend
       buttonElement = document.getElementById(currentClickedLayerId);
-      buttonElement.classList.add("buttonActive");
+      buttonElement.classList.add("buttonLegendeActive");
       lastClickedLayerId = currentClickedLayerId; // set the current layer as last layer
     } else {
       // if same layer is clicked
@@ -318,7 +335,7 @@ $(document).ready(function () {
       document.getElementById("legend" + currentClickedLayerId).style.display =
         "none"; // remove legend
       buttonElement = document.getElementById(currentClickedLayerId);
-      buttonElement.classList.remove("buttonActive");
+      buttonElement.classList.remove("buttonLegendeActive");
       lastClickedLayerId = "";
       currentClickedLayerId = "";
     }

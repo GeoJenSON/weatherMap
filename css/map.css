@@ -26,7 +26,7 @@
     height: auto;
 }
 
-.button {
+.buttonLegende {
     margin: 0 .8em;
     background-color: #cdcdcd;
     border:none;
@@ -41,15 +41,35 @@
     cursor: pointer;
   }
 
-  .button:hover {
+  .buttonLegende:hover {
     background-color: #5c5c5c;
     transition-duration: 1s;
   }
 
 /* Style the active class, and buttons on mouse-over */
-.buttonActive {
+.buttonLegendeActive {
     background-color: #5c5c5c;
 }
+
+.button {
+    margin: 0 .8em;
+    background-color: #5c5c5c;
+    border:none;
+    border-radius: .3em;
+    color: white;
+    padding: .8em;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    padding: 10px 16px;
+    cursor: pointer;
+  }
+
+  .button:hover {
+    background-color: #353535;
+    transition-duration: 1s;
+  }
 
 #weatherIcon{
     text-align: center;
@@ -61,7 +81,7 @@
 
 #weatherIcon > span {
     vertical-align: middle;
-    font-size: 2.5em;
+    font-size: 2em;
 }
 
 @media only screen and (max-width: 639px) {

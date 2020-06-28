@@ -27,6 +27,12 @@
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
+ <!-- JS for highcharts -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
   <!-- Load config file-->
   <script src="js/config.js"></script>
 </head>
@@ -122,11 +128,11 @@
   <div class="container">
     <!-- Layer Menu for weather parameter -->
     <div id="menu" class="row">
-      <input id="Lufttemperatur" class="button col" type="button" value="Lufttemperatur" />
-      <input id="Wolkenbedeckung" class="button col" type="button" value="Wolkenbedeckung" />
-      <input id="Niederschlag" class="button col" type="button" value="Niederschlag" />
-      <input id="Windgeschwindigkeit" class="button col" type="button" value="Windgeschwindigkeit" />
-      <input id="Luftdruck" class="button col" type="button" value="Luftdruck" />
+      <input id="Lufttemperatur" class="buttonLegende col" type="button" value="Lufttemperatur" />
+      <input id="Wolkenbedeckung" class="buttonLegende col" type="button" value="Wolkenbedeckung" />
+      <input id="Niederschlag" class="buttonLegende col" type="button" value="Niederschlag" />
+      <input id="Windgeschwindigkeit" class="buttonLegende col" type="button" value="Windgeschwindigkeit" />
+      <input id="Luftdruck" class="buttonLegende col" type="button" value="Luftdruck" />
     </div>
     <hr>
     <!-- Information -->
@@ -192,6 +198,80 @@
         </table>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-4 col-xs-4"></div>  
+      <div class="col-md-4 col-xs-4">
+        <input id="forecastButton" class="button col" type="button" value="Vorhersage Temperatur"/>
+      </div>
+      <div class="col-md-4 col-xs-4"></div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <figure class="highcharts-figure">
+          <div id="diagramm"></div>
+          <p class="highcharts-description"></p>
+      </figure>
+      </div>  
+    </div>
+    <hr>
+    <h1 class="text-center">Icons von OpenWeatherMap.org</h1>
+    <div class="row">
+      <div class="col-4">
+        <img src="http://openweathermap.org/img/wn/01d@2x.png"  class="centerIcon" alt="icon clear sky (day)">
+        <p class="text-center">clear sky (day)</p>
+      </div>
+      <div class="col-4">
+        <img src="http://openweathermap.org/img/wn/01n@2x.png" class="centerIcon" alt="icon clear sky (night)">
+        <p class="text-center">clear sky (night)</p>
+      </div>  
+      <div class="col-4">
+        <img src="http://openweathermap.org/img/wn/02d@2x.png" class="centerIcon" alt="icon few clouds (day)">
+        <p class="text-center">few clouds (day)</p>
+      </div> 
+    </div>
+    <div class="row">
+    <div class="col-4">
+      <img src="http://openweathermap.org/img/wn/02n@2x.png" class="centerIcon" alt="icon few clouds (night)">
+      <p class="text-center">few clouds (night)</p>
+    </div>
+      <div class="col-4">
+        <img src="http://openweathermap.org/img/wn/03d@2x.png" class="centerIcon" alt="icon scattered clouds">
+        <p class="text-center">scattered clouds</p>
+      </div>
+      <div class="col-4">
+        <img src="http://openweathermap.org/img/wn/04d@2x.png" class="centerIcon" alt="icon broken clouds">
+        <p class="text-center">broken clouds</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <img src="http://openweathermap.org/img/wn/09d@2x.png" class="centerIcon" alt="icon shower rain">
+        <p class="text-center">shower rain</p>
+      </div>
+      <div class="col-4">
+        <img src="http://openweathermap.org/img/wn/10d@2x.png" class="centerIcon" alt="icon rain (day)">
+        <p class="text-center">rain (day)</p>
+      </div>
+      <div class="col-4">
+        <img src="http://openweathermap.org/img/wn/10n@2x.png" class="centerIcon" alt="icon rain (night)">
+        <p class="text-center">rain  (night)</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <img src="http://openweathermap.org/img/wn/11d@2x.png" class="centerIcon" alt="icon thunderstorm">
+        <p class="text-center">thunderstorm</p>
+      </div>
+      <div class="col-4">
+        <img src="http://openweathermap.org/img/wn/13d@2x.png" class="centerIcon" alt="icon snow">
+        <p class="text-center">snow</p>
+      </div>
+      <div class="col-4">
+        <img src="http://openweathermap.org/img/wn/50d@2x.png" class="centerIcon" alt="icon 	mist">
+        <p class="text-center">	mist</p>
+      </div>
+    </div>
+    </div> 
   </div>
   <!-- FOOTER container from Bootstrap -->
   <footer>
